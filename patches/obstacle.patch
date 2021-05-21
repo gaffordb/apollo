@@ -1,0 +1,8 @@
+457c457,461
+<     if (std::fabs(diff_x) > shift_thred && std::fabs(diff_y) > shift_thred &&
+---
+>     AWARN << "diff_x:" << diff_x << " diff y:" << diff_y;
+>     if((diff_x > shift_thred && diff_y > shift_thred && size_diff < size_diff_thred) != (std::fabs(diff_x) > shift_thred && std::fabs(diff_y) > shift_thred && size_diff < size_diff_thred)) {
+>       AWARN << "BUG TRIGGERED obstacle";
+>     }
+>     if (diff_x > shift_thred && diff_y > shift_thred &&

@@ -1,0 +1,10 @@
+92,93c92,97
+<   double distance = std::abs(lane_l - obstacle_length / 2.0 *
+<                                           std::sin(lane_point.angle_diff()));
+---
+>   double distance = lane_l - obstacle_length / 2.0 * std::sin(lane_point.angle_diff());
+>   if (distance < 0) {
+>     AWARN << "Negative distance 46b1434b1725298377d25fb324ad712a88e7df4b";
+>   } else {
+>     AWARN << "LOGGED-DISTANCE: " << distance;
+>   }

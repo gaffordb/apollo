@@ -45,6 +45,10 @@ py_binary(
     srcs = ["listener.py"],
     deps = [
         "//cyber/proto:unit_test_py_pb2",
+        "//modules/perception/proto:perception_obstacle_py_pb2",
+        "//modules/drivers/gnss/proto:gnss_best_pose_py_pb2",
+        "//modules/localization/proto:pose_py_pb2",
+        "//modules/localization/proto:localization_py_pb2",
         "//cyber/python/cyber_py3:cyber",
     ],
 )
