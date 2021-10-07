@@ -248,7 +248,10 @@ function run_bazel_build() {
   info "${TAB}Disabled:      ${YELLOW}${disabled_targets}${NO_COLOR}"
 
   local job_args="--jobs=$(nproc) --local_ram_resources=HOST_RAM*0.7"
-  bazel build ${CMDLINE_OPTIONS} ${job_args} -- ${formatted_targets}
+
+  # Need to do per file copts because otherwise non-gcc things don't know how to compile and they throw errors...
+  #bazel build --per_file_copt=//external/.*@-fprofile-arcs --per_file_copt=-//external/.*@-ftest-coverage --linkopt="-fprofile-arcs -ftest-coverage" ${CMDLINE_OPTIONS} ${job_args} -- ${formatted_targets}
+  bazel build --copt="--coverage" --copt="-g" --linkopt="-fprofile-arcs -ftest-coverage" ${CMDLINE_OPTIONS} ${job_args} -- ${formatted_targets}
 }
 
 function main() {

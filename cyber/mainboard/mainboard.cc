@@ -20,11 +20,24 @@
 #include "cyber/mainboard/module_argument.h"
 #include "cyber/mainboard/module_controller.h"
 #include "cyber/state.h"
+#include <signal.h>
+#include <stdio.h>
 
 using apollo::cyber::mainboard::ModuleArgument;
 using apollo::cyber::mainboard::ModuleController;
 
+extern "C" void __gcov_flush();
+
+
+void flush_gcov_data( int signum ) {
+   AINFO << "Interrupt signal (" << signum << ") received.\n";
+   __gcov_flush();
+   exit(signum);  
+}
+
+
 int main(int argc, char** argv) {
+  signal(SIGUSR2, flush_gcov_data);
   // parse the argument
   ModuleArgument module_args;
   module_args.ParseArgument(argc, argv);

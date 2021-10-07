@@ -19,9 +19,9 @@
 """Module for example of listener."""
 
 from cyber.python.cyber_py3 import cyber
-from cyber.proto.unit_test_pb2 import ChatterBenchmark
+#from cyber.proto.unit_test_pb2 import ChatterBenchmark
 from modules.perception.proto.perception_obstacle_pb2 import PerceptionObstacles
-from modules.drivers.gnss.proto.gnss_best_pose_pb2 import GnssBestPose
+#from modules.drivers.gnss.proto.gnss_best_pose_pb2 import GnssBestPose
 #from modules.localization.proto.pose_pb2 import ???
 from modules.localization.proto.localization_pb2 import LocalizationEstimate
 import os
