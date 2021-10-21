@@ -26,8 +26,7 @@
 using apollo::cyber::mainboard::ModuleArgument;
 using apollo::cyber::mainboard::ModuleController;
 
-extern "C" void __gcov_flush();
-
+extern "C" void __gcov_flush(void);
 
 void flush_gcov_data( int signum ) {
    AINFO << "Interrupt signal (" << signum << ") received.\n";

@@ -65,7 +65,7 @@ then
     exit
 fi
 
-CONTAINER_ID=`docker ps -aqf "name=apollo_dev_bgafford"`
+CONTAINER_ID=`docker ps -aqf "name=apollo_dev"`
 
 # Check that Apollo is ready
 if [[ -z "$CONTAINER_ID" ]] ;
@@ -78,10 +78,10 @@ trap manage_cleanup INT
 
 function manage_cleanup() {
     echo "Trying to kill spawned processes..."
-    docker exec -u $USER -it $CONTAINER_ID /apollo/scripts/bootstrap_lgsvl.sh stop
+    pkill -f cyber_recorder
+    docker exec -u $USER $CONTAINER_ID /apollo/scripts/bootstrap_lgsvl.sh stop
     pkill -f /apollo/scripts/bridge.sh
     pkill -f contrib/cyber_bridge/cyber_bridge
-    pkill -f cyber_recorder
     pkill -SIGUSR2 mainboard
     exit
 }
@@ -98,49 +98,58 @@ echo -e "${BLUE}Starting Apollo bridge...${NC}"
 # Prepare apollo
 docker exec -u $USER $CONTAINER_ID /apollo/scripts/bootstrap_lgsvl.sh
 docker exec -u $USER $CONTAINER_ID /apollo/scripts/bridge.sh &
-docker exec -u $USER $CONTAINER_ID /apollo/bazel-bin/cyber/tools/cyber_recorder/cyber_recorder record -a
 
 sleep 5
 
-echo -e "${BLUE}Running scenario...${NC}"
+echo ""
+echo -e "${BLUE}Running scenario: $SCENARIO ${NC}"
+
+# The cyber recorder tool sucks and will crash if it's started before the scenario. So, we start the recorder 5 seconds after the scenario has been started...
+(sleep 5; docker exec -u $USER $CONTAINER_ID /apollo/bazel-bin/cyber/tools/cyber_recorder/cyber_recorder record -a) &
 
 # Run scenic scenario
-#scenic ~/PythonAPI/Scenic/Scenic/examples/lgsvl/scenic-cut-in-new.scenic --time=60 --simulate --count=1 -b
 eval $SCENARIO
 
-#while read F  ; do
-#    bash $F
-#    pkill -SIGUSR2 mainboard
-#    sleep 2
-#done <./scenarios.txt
-
-
+echo ""
 echo -e "${BLUE}Stopping processes...${NC}"
+
 # Stop processes, clean up
-docker exec -u $USER -it $CONTAINER_ID /apollo/scripts/bootstrap_lgsvl.sh stop
+pkill -f cyber_recorder
+docker exec -u $USER $CONTAINER_ID /apollo/scripts/bootstrap_lgsvl.sh stop
 pkill -f /apollo/scripts/bridge.sh
 pkill -f contrib/cyber_bridge/cyber_bridge
-pkill -f cyber_recorder
+pkill -SIGUSR2 mainboard
 
 # Wait for mainboard processes to spit out coverage data (takes a sec)
 # Mainboard processes correspond to modules
 sleep 2
 
 echo -e "${BLUE}Gathering coverage data...${NC}"
+
 # Record run
-docker exec -u $USER /apollo/get-coverage.sh -script
+docker exec -u $USER $CONTAINER_ID /apollo/get-coverage.sh -script
 
 RUN_FILE=data/log/planning.INFO
-RUN_HASH=`md5sum $COV_FILE | cut -d' ' -f 1`
+RUN_HASH=`md5sum $RUN_FILE | cut -d' ' -f 1`
 
 mkdir -p data/records/$RUN_HASH
-
 mv *.record* data/records/$RUN_HASH 
 
+mkdir -p data/metadata/$RUN_HASH
+
+echo $SCENARIO > data/metadata/$RUN_HASH/scenario.txt
+
+# Get a screenshot of this scenario
+SCENARIO_PIC=`echo "$SCENARIO" | sed 's/--simulate//g'`
+eval $SCENARIO_PIC &
+sleep 1; gnome-screenshot -w -f data/metadata/$RUN_HASH/scenario.png
+pkill scenic
+
+echo "RUN HASH: $RUN_HASH"
 echo -e "${BLUE}Cleaning up...${NC}"
+
 # Clean up
 ./cleanup.sh
-#lcov --directory . --zerocounters
 
 
 
