@@ -63,7 +63,7 @@ while read F  ; do
 	    _res=$?
 	    while [[ $_res != 0 ]] && [[ -z "$DONE" ]]
 	    do
-		./run-scenario.sh --scenario "$F"
+		./run-scenario.sh --scenario "$F --seed=$i"
 		docker exec -u $USER $CONTAINER_ID lcov --directory /apollo --zerocounters
 		run_success
 		_res=$?
