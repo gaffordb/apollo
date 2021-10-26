@@ -108,7 +108,7 @@ echo -e "${BLUE}Running scenario: $SCENARIO ${NC}"
 (sleep 5; docker exec -u $USER $CONTAINER_ID /apollo/bazel-bin/cyber/tools/cyber_recorder/cyber_recorder record -a) &
 
 # Run scenic scenario
-eval $SCENARIO
+docker run --net=host scenario-runner $SCENARIO
 
 echo ""
 echo -e "${BLUE}Stopping processes...${NC}"
@@ -140,10 +140,13 @@ mkdir -p data/metadata/$RUN_HASH
 echo $SCENARIO > data/metadata/$RUN_HASH/scenario.txt
 
 # Get a screenshot of this scenario
-SCENARIO_PIC=`echo "$SCENARIO" | sed 's/--simulate//g'`
-eval $SCENARIO_PIC &
-sleep 1; gnome-screenshot -w -f data/metadata/$RUN_HASH/scenario.png
-pkill scenic
+# Don't do this anymore bc it's not really helpful and you have to pass the display etc
+# If we really wanted to do this, add a `-e DISPLAY=$DISPLAY` arg to the docker run command...
+
+# SCENARIO_PIC=`echo "$SCENARIO" | sed 's/--simulate//g'`
+# eval $SCENARIO_PIC &
+# sleep 1; gnome-screenshot -w -f data/metadata/$RUN_HASH/scenario.png
+# pkill scenic
 
 echo "RUN HASH: $RUN_HASH"
 echo -e "${BLUE}Cleaning up...${NC}"

@@ -1,6 +1,6 @@
-scenic ~/PythonAPI/Scenic/Scenic/examples/lgsvl/scenic-cut-in-new.scenic --time=45 --simulate --count=1 -b
-scenic ~/PythonAPI/Scenic/Scenic/examples/lgsvl/left_turn_ped.scenic --time=60 --simulate --count=1 -b
-scenic ~/PythonAPI/Scenic/Scenic/examples/lgsvl/left_turn.scenic --time=60 --simulate --count=1 -b
-scenic ~/PythonAPI/Scenic/Scenic/examples/lgsvl/right_turn_ped.scenic --time=60 --simulate --count=1 -b
-scenic ~/PythonAPI/Scenic/Scenic/examples/lgsvl/right_turn.scenic --time=60 --simulate --count=1 -b
+scenic Scenic/examples/lgsvl/scenic-cut-in-new.scenic --time=60 --simulate --count=1 -b
+scenic Scenic/examples/lgsvl/left_turn_ped.scenic --time=60 --simulate --count=1 -b
+scenic Scenic/examples/lgsvl/left_turn.scenic --time=60 --simulate --count=1 -b
+scenic Scenic/examples/lgsvl/right_turn_ped.scenic --time=60 --simulate --count=1 -b
+scenic Scenic/examples/lgsvl/right_turn.scenic --time=60 --simulate --count=1 -b
 

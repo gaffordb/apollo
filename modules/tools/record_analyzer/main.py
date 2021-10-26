@@ -32,7 +32,6 @@ from modules.prediction.proto import prediction_obstacle_pb2
 from modules.tools.record_analyzer.module_control_analyzer import ControlAnalyzer
 from modules.tools.record_analyzer.module_planning_analyzer import PlannigAnalyzer
 
-
 def process(control_analyzer, planning_analyzer, lidar_endtoend_analyzer,
             is_simulation, plot_planning_path, plot_planning_refpath, all_data):
     is_auto_drive = False
@@ -96,6 +95,9 @@ def process(control_analyzer, planning_analyzer, lidar_endtoend_analyzer,
 
 
 if __name__ == "__main__":
+    print('-------')
+    print(':'.join(sys.path))
+    print('-------')
     if len(sys.argv) < 2:
         print("usage: python main.py record_file")
     parser = argparse.ArgumentParser(

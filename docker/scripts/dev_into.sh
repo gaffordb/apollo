@@ -20,6 +20,9 @@ DEV_CONTAINER="apollo_dev_${USER}"
 
 xhost +local:root 1>/dev/null 2>&1
 
+# This is easier than figuring out their docker thing...
+docker exec "${DEV_CONTAINER}" /apollo/fix-docker.sh
+
 docker exec \
     -u "${DOCKER_USER}" \
     -e HISTFILE=/apollo/.dev_bash_hist \
